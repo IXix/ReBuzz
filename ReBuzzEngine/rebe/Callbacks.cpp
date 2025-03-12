@@ -760,6 +760,9 @@ void CMICallbacks::Play()
 void CMICallbacks::Stop()
 {
 	MICB0;
+	IPC::Message m(IPC::HostStop);
+	IPC::Message reply;
+	DoCallback(m, reply);
 }
 
 bool CMICallbacks::RenameMachine(CMachine *pmac, char const *name)

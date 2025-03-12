@@ -981,6 +981,13 @@ namespace ReBuzz.NativeMachine
                             DoReplyMessage();
                         }
                         break;
+                    case HostMessages.HostStop:
+                        {
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            buzz.Playing = false;
+                            DoReplyMessage();
+                        }
+                        break;
                 }
             }
         }
