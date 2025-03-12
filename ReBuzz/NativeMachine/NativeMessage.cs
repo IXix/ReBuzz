@@ -1008,6 +1008,18 @@ namespace ReBuzz.NativeMachine
                             DoReplyMessage();
                         }
                         break;
+                    case HostMessages.HostSoloMachine:
+                        {
+                            long hostMachineId = GetMessageData<long>();
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            MachineCore machine = buzz.SongCore.MachinesList.FirstOrDefault(m => m.CMachineHost == hostMachineId);
+                            if (machine != null)
+                            {
+                                machine.IsSoloed = !machine.IsSoloed;
+                            }
+                            DoReplyMessage();
+                        }
+                        break;
                 }
             }
         }

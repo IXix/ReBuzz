@@ -1086,6 +1086,10 @@ void CMICallbacks::MuteMachine(CMachine *pmac, bool mute)
 void CMICallbacks::SoloMachine(CMachine *pmac)
 {
 	MICB1(pmac);
+	IPC::Message m(IPC::HostSoloMachine);
+	m.Write(pmac->pHostMac);
+	IPC::Message reply;
+	DoCallback(m, reply);
 }
 
 void CMICallbacks::UpdateParameterDisplays(CMachine *pmac)
