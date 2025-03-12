@@ -988,6 +988,13 @@ namespace ReBuzz.NativeMachine
                             DoReplyMessage();
                         }
                         break;
+                    case HostMessages.HostToggleRecordMode:
+                        {
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            buzz.Recording = !buzz.Recording;
+                            DoReplyMessage();
+                        }
+                        break;
                 }
             }
         }

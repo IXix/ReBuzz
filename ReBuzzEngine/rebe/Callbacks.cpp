@@ -1421,6 +1421,9 @@ bool CMICallbacks::GetOption(char const *name)
 void CMICallbacks::ToggleRecordMode()
 {
 	MICB0;
+	IPC::Message m(IPC::HostToggleRecordMode);
+	IPC::Message reply;
+	DoCallback(m, reply);
 }
 
 int CMICallbacks::GetSequenceCount(CMachine *pmac)
