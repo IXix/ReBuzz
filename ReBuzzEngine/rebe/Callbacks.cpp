@@ -1076,6 +1076,11 @@ void CMICallbacks::SetMachinePosition(CMachine *pmac, float x, float y)
 void CMICallbacks::MuteMachine(CMachine *pmac, bool mute)
 {
 	MICB2(pmac, mute);
+	IPC::Message m(IPC::HostMuteMachine);
+	m.Write(pmac->pHostMac);
+	m.Write(mute);
+	IPC::Message reply;
+	DoCallback(m, reply);
 }
 
 void CMICallbacks::SoloMachine(CMachine *pmac)

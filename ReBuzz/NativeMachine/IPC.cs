@@ -102,7 +102,8 @@ namespace ReBuzz.NativeMachine
         HostSetSongPosition,
         HostPlay,
         HostStop,
-        HostToggleRecordMode
+        HostToggleRecordMode,
+        HostMuteMachine
     };
 
     public enum MIDIMessages

@@ -995,6 +995,19 @@ namespace ReBuzz.NativeMachine
                             DoReplyMessage();
                         }
                         break;
+                    case HostMessages.HostMuteMachine:
+                        {
+                            long hostMachineId = GetMessageData<long>();
+                            bool mute = GetMessageData<bool>();
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            MachineCore machine = buzz.SongCore.MachinesList.FirstOrDefault(m => m.CMachineHost == hostMachineId);
+                            if (machine != null)
+                            {
+                                machine.IsMuted = mute;
+                            }
+                            DoReplyMessage();
+                        }
+                        break;
                 }
             }
         }

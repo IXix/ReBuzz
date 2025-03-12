@@ -106,7 +106,8 @@ enum HostMessages
 	HostSetSongPosition,
 	HostPlay,
 	HostStop,
-	HostToggleRecordMode
+	HostToggleRecordMode,
+	HostMuteMachine
 };
 
 enum MIDIMessages
