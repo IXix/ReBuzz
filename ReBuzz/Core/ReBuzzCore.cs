@@ -1161,17 +1161,6 @@ namespace ReBuzz.Core
 
                 IReBuzzFile bmxFile = GetReBuzzFile(filename);
 
-                if (false)
-                {
-                    // Test
-                    bmxFile.FileEvent += (type, eventText, o) =>
-                    {
-                        FileEvent?.Invoke(type, eventText, o);
-                    };
-                    OpenFile.Invoke(filename);
-                    bmxFile.Load(filename);
-                }
-
                 try
                 {
                     bmxFile.FileEvent += (type, eventText, o) =>
@@ -1784,6 +1773,7 @@ namespace ReBuzz.Core
         {
             SkipAudio = true;
             Playing = false;
+            InfoText = "";
 
             // Create status window
             OpenFile.Invoke("Closing song...");
@@ -1890,7 +1880,14 @@ namespace ReBuzz.Core
         private readonly IUserMessages userMessages;
         private readonly IKeyboard keyboard;
 
-        public string InfoText { get => infoText; internal set { infoText = value; PropertyChanged.Raise(this, "InfoText"); } }
+        public string InfoText { get => infoText; set
+            {
+                if (infoText != value)
+                {
+                    infoText = value; PropertyChanged.Raise(this, "InfoText");
+                }
+            }
+        }
 
         public AudioEngine AudioEngine { get; internal set; }
         public string DefaultPatternEditor { get; internal set; }

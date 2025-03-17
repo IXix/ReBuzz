@@ -95,9 +95,9 @@ namespace ReBuzz.MachineManagement
                 // If missing
                 if (!buzz.MachineDLLs.ContainsKey(libName))
                 {
+                    buzz.DCWriteErrorLine("Missing machine: " + libName);
                     var machineDLL = machine.MachineDLL;
                     machineDLL.IsMissing = true;
-                    machineDLL.IsCrashed = true;
                     machineDLL.Name = libName;
                     machineDLL.Path = path;
                     machineDLL.MachineInfo.MinTracks = machineDLL.MachineInfo.MaxTracks = trackCount;
@@ -153,7 +153,10 @@ namespace ReBuzz.MachineManagement
             machine.TrackCount = trackcount;
             machine.MachineDLL.ManagedDLL = managedMachineDLL;
 
-            ManagedMachines.Add(machine, managedMachineHost);
+            lock (ReBuzzCore.AudioLock)
+            {
+                ManagedMachines.Add(machine, managedMachineHost);
+            }
 
             machine.SetCommands();
 
@@ -230,7 +233,7 @@ namespace ReBuzz.MachineManagement
             var audioMessage = nativeMachineHost.AudioMessage;
 
             // Send wavetable info before new?
-            //audioMessage.AudioBeginBlock(machine, buzz.Song.Wavetable as WavetableCore);
+            audioMessage.AudioBeginBlock(machine, buzz.Song.Wavetable as WavetableCore);
 
             uiMessage.SendMessageBuzzInitSync(Buzz.MainWindowHandle, machine.MachineDLL.Is64Bit);
             uiMessage.UIDSPInitSync(ReBuzzCore.masterInfo.SamplesPerSec);
@@ -268,12 +271,22 @@ namespace ReBuzz.MachineManagement
             machine.MachineDLL.SkinLEDPosition = ledPosition;
 
             // Add machine here so that it is visible when machine does callbacks
-            nativeMachines.Add(machine, nativeMachineHost);
-            buzz.SongCore.MachinesList.Add(machine);
-            
+            lock (ReBuzzCore.AudioLock)
+            {
+                nativeMachines.Add(machine, nativeMachineHost);
+                buzz.SongCore.MachinesList.Add(machine);
+            }
+
+            uiMessage.UIGetEnvelopeInfos(machine);
+
             if (callInit)
             {
                 CallInit(machine, data, trackCount);
+            }
+
+            if (machine.DLL.IsCrashed)
+            {
+                ValidateMachineStructures(machine);
             }
         }
 
@@ -315,8 +328,25 @@ namespace ReBuzz.MachineManagement
             machine.TrackCount = trackCount;
             audioMessage.AudioSetNumTracks(machine, trackCount);
 
+            if (machine.DLL.IsCrashed)
+            {
+                ValidateMachineStructures(machine);
+            }
+
             machine.Ready = true;
             machine.MachineDLL.IsLoaded = true;
+        }
+
+        private void ValidateMachineStructures(MachineCore machine)
+        {
+            if (machine.ParameterGroupsList.Count == 1)
+            {
+                machine.ParameterGroupsList.Add(new ParameterGroup(machine, ParameterGroupType.Global));
+            }
+            if (machine.ParameterGroupsList.Count == 2)
+            {
+                machine.ParameterGroupsList.Add(new ParameterGroup(machine, ParameterGroupType.Track));
+            }
         }
 
         internal IMachineDLL GetPatternEditorDLL(MachineCore machine)
@@ -829,8 +859,8 @@ namespace ReBuzz.MachineManagement
                         return nativeMachines[machine].UIMessage.UISave(machine);
                     }
                 }
+                return null;
             }
-            return null;
         }
 
         internal void SetMachineData(MachineCore machine, byte[] value)
