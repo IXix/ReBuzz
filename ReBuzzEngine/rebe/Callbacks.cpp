@@ -1347,7 +1347,14 @@ void CMICallbacks::RemapLoadedMachineName(char* name, int bufsize)
 bool CMICallbacks::IsMachineMuted(CMachine *pmac)
 {
 	MICB1(pmac);
-	return false;
+	IPC::Message m(IPC::HostIsMachineMuted);
+	m.Write(pmac->pHostMac);
+	IPC::Message reply;
+	DoCallback(m, reply);
+	IPC::MessageReader r(reply);
+	bool muted;
+	r.Read(muted);
+	return muted;
 }
 
 int CMICallbacks::GetInputChannelConnectionCount(CMachine *pmac, int channel)

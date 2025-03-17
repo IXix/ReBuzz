@@ -104,7 +104,8 @@ namespace ReBuzz.NativeMachine
         HostStop,
         HostToggleRecordMode,
         HostMuteMachine,
-        HostSoloMachine
+        HostSoloMachine,
+        HostIsMachineMuted
     };
 
     public enum MIDIMessages

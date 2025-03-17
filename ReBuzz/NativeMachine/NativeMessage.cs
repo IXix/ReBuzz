@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace ReBuzz.NativeMachine
 {
@@ -1017,6 +1018,21 @@ namespace ReBuzz.NativeMachine
                             {
                                 machine.IsSoloed = !machine.IsSoloed;
                             }
+                            DoReplyMessage();
+                        }
+                        break;
+                    case HostMessages.HostIsMachineMuted:
+                        {
+                            long hostMachineId = GetMessageData<long>();
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            MachineCore machine = buzz.SongCore.MachinesList.FirstOrDefault(m => m.CMachineHost == hostMachineId);
+                            bool ret = false;
+                            if (machine != null)
+                            {
+                                ret = machine.IsMuted;
+                            }
+                            Reset();
+                            SetMessageData(ret);
                             DoReplyMessage();
                         }
                         break;
