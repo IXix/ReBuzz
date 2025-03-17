@@ -1475,7 +1475,15 @@ bool CMICallbacks::IsValidAsciiChar(CMachine *pmac, int param, char ch)
 int CMICallbacks::GetConnectionCount(CMachine *pmac, bool output)
 {
 	MICB2(pmac, output);
-	return 0;
+	IPC::Message m(IPC::HostGetConnectionCount);
+	m.Write(pmac->pHostMac);
+	m.Write(output);
+	IPC::Message reply;
+	DoCallback(m, reply);
+	IPC::MessageReader r(reply);
+	int count;
+	r.Read(count);
+	return count;
 }
 
 CMachineConnection *CMICallbacks::GetConnection(CMachine *pmac, bool output, int index)

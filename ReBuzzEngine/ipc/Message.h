@@ -109,7 +109,8 @@ enum HostMessages
 	HostToggleRecordMode,
 	HostMuteMachine,
 	HostSoloMachine,
-	HostIsMachineMuted
+	HostIsMachineMuted,
+	HostGetConnectionCount
 };
 
 enum MIDIMessages
