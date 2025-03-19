@@ -106,7 +106,10 @@ namespace ReBuzz.NativeMachine
         HostMuteMachine,
         HostSoloMachine,
         HostIsMachineMuted,
-        HostGetConnectionCount
+        HostGetConnectionCount,
+        HostGetConnection,
+        HostGetConnectionSource,
+        HostGetConnectionDestination
     };
 
     public enum MIDIMessages

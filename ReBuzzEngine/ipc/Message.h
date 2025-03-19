@@ -110,7 +110,10 @@ enum HostMessages
 	HostMuteMachine,
 	HostSoloMachine,
 	HostIsMachineMuted,
-	HostGetConnectionCount
+	HostGetConnectionCount,
+	HostGetConnection,
+	HostGetConnectionSource,
+	HostGetConnectionDestination
 };
 
 enum MIDIMessages
