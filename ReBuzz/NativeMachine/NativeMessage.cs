@@ -1061,6 +1061,38 @@ namespace ReBuzz.NativeMachine
                             DoReplyMessage();
                         }
                         break;
+                    case HostMessages.HostGetConnection:
+                        {
+                            long hostMachineId = GetMessageData<long>();
+                            bool output = GetMessageBool();
+                            int index = GetMessageData<int>();
+                            Reset();
+
+                            var buzz = Global.Buzz as ReBuzzCore;
+                            MachineCore machine = buzz.SongCore.MachinesList.FirstOrDefault(m => m.CMachineHost == hostMachineId);
+
+                            IntPtr ret = 0;
+                            if (machine != null)
+                            {
+                                if (output)
+                                {
+                                    if (index < machine.Outputs.Count)
+                                    {
+                                        ret = (machine.Outputs[index] as MachineConnectionCore).CMachineConnection;
+                                    }
+                                }
+                                else
+                                {
+                                    if (index < machine.Inputs.Count)
+                                    {
+                                        ret = (machine.Inputs[index] as MachineConnectionCore).CMachineConnection;
+                                    }
+                                }
+                            }
+                            SetMessageDataPtr(ret);
+                            DoReplyMessage();
+                        }
+                        break;
                     case HostMessages.HostGetConnectionSource:
                         {
                             long hostMachineId = GetMessageData<long>();
